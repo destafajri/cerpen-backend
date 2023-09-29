@@ -1,0 +1,22 @@
+# logging
+logging:
+  level:
+    '[com.backend.java]': TRACE
+
+# configuration
+app:
+  timezone: Asia/Jakarta
+credential:
+  APIkey: ${SECRET_KEY}
+
+# database source
+spring:
+  datasource:
+    url: {db-url}
+    username: {postgresql}
+    password: {password}
+    driverClassName: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
