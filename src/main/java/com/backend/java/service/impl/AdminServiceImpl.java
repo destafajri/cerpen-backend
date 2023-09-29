@@ -6,6 +6,7 @@ import com.backend.java.domain.model.AdminCreateRequestDTO;
 import com.backend.java.repository.postgres.AdminRepository;
 import com.backend.java.repository.postgres.UserRepository;
 import com.backend.java.service.AdminService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,7 @@ public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
 
     @Override
+    @Transactional
     public void createNewAdmin(AdminCreateRequestDTO payload) {
         UserEntity user = new UserEntity();
         AdminEntity admin = new AdminEntity();
