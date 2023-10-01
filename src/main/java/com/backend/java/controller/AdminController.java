@@ -21,7 +21,7 @@ import java.util.Collections;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/auth/admin")
 public class AdminController {
 
     private final AdminService adminService;
