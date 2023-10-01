@@ -11,6 +11,8 @@ credential:
 
 # database source
 spring:
+  main:
+    allow-circular-references: true
   datasource:
     url: {db-url}
     username: {postgresql}

@@ -17,4 +17,5 @@ public class ResponseData<T> {
     private HttpStatus status;
     private List<String> message;
     private T data;
+    private String token;
 }
