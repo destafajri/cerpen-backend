@@ -21,8 +21,9 @@ import java.util.Collections;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/author")
+@RequestMapping("/auth/author")
 public class AuthorController {
+
     private final AuthorService authorService;
 
     @PostMapping("/create")
