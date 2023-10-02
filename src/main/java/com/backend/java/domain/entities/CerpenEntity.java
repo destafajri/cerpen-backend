@@ -18,14 +18,14 @@ public class CerpenEntity {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private AuthorEntity authorId;
 
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
-    @Column(name = "cerpen_contains", nullable = false, unique = true)
+    @Column(name = "cerpen_contains", length = 1000, nullable = false, unique = true)
     private String cerpenContains;
 
     @Column(name = "created_at", nullable = false)
