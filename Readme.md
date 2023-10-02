@@ -25,8 +25,20 @@ Provide a brief overview of your project here, including its purpose and any uni
 ## Database Schema
 
 Here's an overview of the database schema for this project:
+### Users Table
 
-### Admin Table
+| Column Name | Data Type  | Constraints            |
+|-------------|------------|------------------------|
+| id          | UUID       | PRIMARY KEY            |
+| email       | VARCHAR(255) | NOT NULL, UNIQUE      |
+| username    | VARCHAR(255) | NOT NULL, UNIQUE      |
+| password    | VARCHAR(255) | NOT NULL              |
+| role        | VARCHAR(255) | NOT NULL              |
+| is_active   | BOOLEAN    | NOT NULL              |
+| created_at  | TIMESTAMP  | NOT NULL              |
+| updated_at  | TIMESTAMP  |                        |
+
+### Admins Table
 
 | Column Name | Data Type  | Constraints         |
 |-------------|------------|---------------------|
@@ -34,7 +46,7 @@ Here's an overview of the database schema for this project:
 | user_id     | UUID       | NOT NULL, UNIQUE    |
 | name        | VARCHAR(255) | NOT NULL          |
 
-### Author Table
+### Authors Table
 
 | Column Name | Data Type  | Constraints         |
 |-------------|------------|---------------------|
