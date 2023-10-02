@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -18,4 +19,8 @@ public class ResponseData<T> {
     private List<String> message;
     private T data;
     private String token;
+
+    public List<String> getMessage() {
+        return (message == null) ? (message = new ArrayList<>()) : message;
+    }
 }
