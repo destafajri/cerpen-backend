@@ -26,6 +26,20 @@ Provide a brief overview of your project here, including its purpose and any uni
 
 Here's an overview of the database schema for this project:
 
+### Users Table
+
+| Column Name | Data Type  | Constraints            |
+|-------------|------------|------------------------|
+| id          | UUID       | PRIMARY KEY            |
+| email       | VARCHAR(255) | NOT NULL, UNIQUE      |
+| username    | VARCHAR(255) | NOT NULL, UNIQUE      |
+| password    | VARCHAR(255) | NOT NULL              |
+| role        | VARCHAR(255) | NOT NULL              |
+| is_active   | BOOLEAN    | NOT NULL              |
+| created_at  | TIMESTAMP  | NOT NULL              |
+| updated_at  | TIMESTAMP  |                        |
+
+
 ### Admin Table
 
 | Column Name | Data Type  | Constraints         |
