@@ -58,14 +58,15 @@ Here's an overview of the database schema for this project:
 
 ### Cerpen Table
 
-| Column Name    | Data Type  | Constraints         |
-|----------------|------------|---------------------|
-| id             | UUID       | PRIMARY KEY         |
-| author_id      | UUID       | NOT NULL            |
-| title          | VARCHAR(255) | NOT NULL, UNIQUE  |
-| cerpen_contains | TEXT      | NOT NULL, UNIQUE    |
-| created_at     | TIMESTAMP  | NOT NULL            |
-| updated_at     | TIMESTAMP  |                     |
+| Column Name    | Data Type    | Constraints         |
+|----------------|--------------|---------------------|
+| id             | UUID         | PRIMARY KEY         |
+| author_id      | UUID         | NOT NULL            |
+| title          | VARCHAR(255) | NOT NULL, UNIQUE    |
+| tema           | VARCHAR(255) | NOT NULL            |
+| cerpen_contains | TEXT        | NOT NULL, UNIQUE    |
+| created_at     | TIMESTAMP    | NOT NULL            |
+| updated_at     | TIMESTAMP    |                     |
 
 ## Getting Started
 

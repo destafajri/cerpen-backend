@@ -1,5 +1,6 @@
 package com.backend.java.domain.entities;
 
+import com.backend.java.domain.model.TemaEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -25,6 +26,10 @@ public class CerpenEntity {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tema", nullable = false)
+    private TemaEnum tema;
+
     @Column(name = "cerpen_contains", length = 1000, nullable = false, unique = true)
     private String cerpenContains;
 
@@ -34,3 +39,4 @@ public class CerpenEntity {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 }
+
