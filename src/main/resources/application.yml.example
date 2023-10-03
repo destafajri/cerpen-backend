@@ -22,6 +22,12 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    data:
+      elasticsearch:
+        cluster-nodes: http://localhost:9200
+        cluster-name: my-custom-cluster
+        repositories:
+          enabled: true
 
 # identify server port running on default environment
 server:

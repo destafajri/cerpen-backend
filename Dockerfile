@@ -1,4 +1,11 @@
-FROM eclipse-temurin:17-jdk-alpine
-VOLUME /tmp
-COPY target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Stage 1: Build the JAR file using Maven
+FROM maven:3.8.4-openjdk-17-slim AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package
+
+# Stage 2: Create the final Docker image
+FROM openjdk:17-jdk-alpine
+COPY --from=build /app/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
