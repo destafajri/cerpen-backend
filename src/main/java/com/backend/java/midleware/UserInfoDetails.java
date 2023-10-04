@@ -5,10 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserInfoDetails implements UserDetails {
 
@@ -19,9 +18,8 @@ public class UserInfoDetails implements UserDetails {
     public UserInfoDetails(UserEntity userInfo) {
         username = userInfo.getUsername();
         password = userInfo.getPassword();
-        authorities = Arrays.stream(userInfo.getRole().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        authorities = Collections.singletonList(
+                new SimpleGrantedAuthority(userInfo.getRole().toString()));
     }
 
     @Override
