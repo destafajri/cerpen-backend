@@ -3,6 +3,7 @@ package com.backend.java.service.impl;
 import com.backend.java.domain.entities.AuthorEntity;
 import com.backend.java.domain.entities.UserEntity;
 import com.backend.java.domain.model.AuthorCreateRequestDTO;
+import com.backend.java.domain.model.RoleEnum;
 import com.backend.java.repository.postgres.AuthorRepository;
 import com.backend.java.repository.postgres.UserRepository;
 import com.backend.java.service.AuthorService;
@@ -31,7 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
         user.setEmail(payload.getEmail());
         user.setUsername(payload.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(payload.getPassword()));
-        user.setRole("author");
+        user.setRole(RoleEnum.AUTHOR);
         user.setActive(true);
         user.setCreatedAt(Timestamp.valueOf(java.time.LocalDateTime.now()));
         author.setUserId(user);
