@@ -3,6 +3,7 @@ package com.backend.java.service.impl;
 import com.backend.java.domain.entities.AdminEntity;
 import com.backend.java.domain.entities.UserEntity;
 import com.backend.java.domain.model.AdminCreateRequestDTO;
+import com.backend.java.domain.model.RoleEnum;
 import com.backend.java.repository.postgres.AdminRepository;
 import com.backend.java.repository.postgres.UserRepository;
 import com.backend.java.service.AdminService;
@@ -31,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
         user.setEmail(payload.getEmail());
         user.setUsername(payload.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(payload.getPassword()));
-        user.setRole("admin");
+        user.setRole(RoleEnum.ADMIN);
         user.setActive(true);
         user.setCreatedAt(Timestamp.valueOf(java.time.LocalDateTime.now()));
         admin.setUserId(user);

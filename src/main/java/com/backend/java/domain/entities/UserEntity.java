@@ -1,5 +1,6 @@
 package com.backend.java.domain.entities;
 
+import com.backend.java.domain.model.RoleEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
@@ -29,8 +30,9 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private String role;
+    private RoleEnum role;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;

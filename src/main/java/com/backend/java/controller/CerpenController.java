@@ -28,7 +28,7 @@ public class CerpenController {
     private final CerpenService cerpenService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('author')")
+    @PreAuthorize("hasAuthority('AUTHOR')")
     public ResponseEntity<ResponseData<String>> createCerpen(
             @RequestHeader(name="Authorization") String token,
             @RequestBody @Valid CerpenCreateRequestDTO dto, Errors errors) {
