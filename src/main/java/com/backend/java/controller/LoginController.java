@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collections;
 
 @Slf4j
 @RestController
@@ -29,26 +28,28 @@ public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping("/login")
+    @PostMapping(
+            path = "/login",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseData<String>> authenticateAndGetToken(
             @RequestBody @Valid LoginRequestDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
+                new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
                         authRequest.getPassword()));
-        ResponseData responseData = new ResponseData<>();
 
         var token = authentication.isAuthenticated() ?
                 jwtService.generateToken(authRequest.getUsername()) :
                 null;
-
         if (token == null) {
             throw new UsernameNotFoundException("invalid user request !");
         }
 
-        responseData.setCode(HttpStatus.OK.value());
-        responseData.setStatus(HttpStatus.OK);
-        responseData.setMessage(Collections.singletonList("login Success"));
-        responseData.setToken(token);
-        return ResponseEntity.ok(responseData);
+        return new ResponseEntity<>(ResponseData.<String>builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Login Success")
+                .token(token).build(),
+                HttpStatus.OK);
     }
 }

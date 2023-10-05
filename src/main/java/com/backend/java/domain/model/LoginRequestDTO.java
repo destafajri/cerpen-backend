@@ -10,6 +10,7 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
 public class LoginRequestDTO {
+
     @NotBlank(message = "username must not be blank")
     @Pattern(regexp = "^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$", message = "must be username format")
     private String username;
