@@ -7,10 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-
-import java.sql.Timestamp;
-import java.util.List;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,15 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseData<T> {
+public class PagingResponse {
 
-    private Integer code;
-    private HttpStatus status;
-    private T message;
-    private List<T> messageError;
-    private T error;
-    private PagingResponse paging;
-    private T data;
-    private String token;
-    private Timestamp requestOn;
+    private Integer currentPage;
+    private Integer totalPage;
+    private Integer size;
+    private String orderType;
 }
