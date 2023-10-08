@@ -7,16 +7,12 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.net.URI;
-import java.util.Collections;
 
 @Slf4j
 @RestController
@@ -26,26 +22,20 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @PostMapping("/create")
+    @PostMapping(
+            path = "/create",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<ResponseData<String>> adminCreate(
-            @RequestBody @Valid AdminCreateRequestDTO dto, Errors errors) {
-        ResponseData responseData = new ResponseData<>();
-
-        if (errors.hasErrors()) {
-            for (ObjectError error : errors.getAllErrors()) {
-                responseData.getMessage().add(error.getDefaultMessage());
-            }
-
-            responseData.setCode(HttpStatus.BAD_REQUEST.value());
-            responseData.setStatus(HttpStatus.BAD_REQUEST);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
-        }
-
+            @RequestBody @Valid AdminCreateRequestDTO dto) {
         adminService.createNewAdmin(dto);
 
-        responseData.setCode(HttpStatus.CREATED.value());
-        responseData.setStatus(HttpStatus.CREATED);
-        responseData.setMessage(Collections.singletonList("Success Create New Admin"));
-        return ResponseEntity.created(URI.create("/admin/create")).body(responseData);
+        return new ResponseEntity<>(ResponseData.<String>builder()
+                .code(HttpStatus.CREATED.value())
+                .status(HttpStatus.CREATED)
+                .message("Succes Create New Admin")
+                .build(),
+                HttpStatus.CREATED);
     }
 }
