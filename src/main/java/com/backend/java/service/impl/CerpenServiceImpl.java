@@ -4,7 +4,7 @@ import com.backend.java.domain.entities.AuthorEntity;
 import com.backend.java.domain.entities.CerpenEntity;
 import com.backend.java.domain.model.CerpenCreateRequestDTO;
 import com.backend.java.exception.ValidationService;
-import com.backend.java.repository.CerpenRepository;
+import com.backend.java.repository.postgres.CerpenRepository;
 import com.backend.java.repository.postgres.AuthorRepository;
 import com.backend.java.service.CerpenService;
 import com.backend.java.utility.CurrentTimeStamp;
