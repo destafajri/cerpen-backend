@@ -21,7 +21,7 @@ public class CerpenEntity {
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
-    private AuthorEntity authorId;
+    private AuthorEntity author;
 
     @Column(name = "title", nullable = false, unique = true)
     private String title;
