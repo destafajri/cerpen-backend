@@ -1,5 +1,6 @@
-package com.backend.java.domain.model;
+package com.backend.java.application.dto;
 
+import com.backend.java.domain.model.TemaEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -8,16 +9,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+import java.util.UUID;
+
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class PagingResponse {
+public class CerpenResponseDTO {
 
-    private Integer currentPage;
-    private Integer totalPage;
-    private Integer size;
-    private String orderType;
+    private UUID id;
+    private String authorName;
+    private String title;
+    private TemaEnum tema;
+    private String cerpenContains;
+    private Date createdAt;
+    private Date updatedAt;
 }

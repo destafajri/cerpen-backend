@@ -26,7 +26,7 @@ public class CerpenElasticsearchEventListener {
             // Get the newly created data from the event
             var newDataCerpen = event.getCreatedCerpen();
 
-            // Convert the NewData to CerpenIndex
+            // ConvertUtils the NewData to CerpenIndex
             CerpenIndex cerpenIndex = convertToCerpenIndex(newDataCerpen);
 
             // Save the new data to Elasticsearch using the repository
