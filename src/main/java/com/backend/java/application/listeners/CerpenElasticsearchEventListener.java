@@ -2,7 +2,7 @@ package com.backend.java.application.listeners;
 
 import com.backend.java.application.event.CerpenCreatedEvent;
 import com.backend.java.domain.entities.CerpenEntity;
-import com.backend.java.domain.entities.CerpenIndex;
+import com.backend.java.domain.document.CerpenIndex;
 import com.backend.java.repository.elasticsearch.CerpenElasticsearchRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

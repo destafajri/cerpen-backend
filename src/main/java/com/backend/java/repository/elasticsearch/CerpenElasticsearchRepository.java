@@ -1,6 +1,6 @@
 package com.backend.java.repository.elasticsearch;
 
-import com.backend.java.domain.entities.CerpenIndex;
+import com.backend.java.domain.document.CerpenIndex;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;

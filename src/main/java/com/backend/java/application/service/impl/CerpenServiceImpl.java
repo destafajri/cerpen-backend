@@ -8,7 +8,7 @@ import com.backend.java.application.exception.ValidationService;
 import com.backend.java.application.service.CerpenService;
 import com.backend.java.domain.entities.AuthorEntity;
 import com.backend.java.domain.entities.CerpenEntity;
-import com.backend.java.domain.entities.CerpenIndex;
+import com.backend.java.domain.document.CerpenIndex;
 import com.backend.java.repository.elasticsearch.CerpenElasticsearchRepository;
 import com.backend.java.repository.postgres.AuthorRepository;
 import com.backend.java.repository.postgres.CerpenRepository;
