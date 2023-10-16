@@ -6,9 +6,9 @@ import com.backend.java.application.dto.CerpenResponseDTO;
 import com.backend.java.application.event.CerpenCreatedEvent;
 import com.backend.java.application.exception.ValidationService;
 import com.backend.java.application.service.CerpenService;
+import com.backend.java.domain.document.CerpenIndex;
 import com.backend.java.domain.entities.AuthorEntity;
 import com.backend.java.domain.entities.CerpenEntity;
-import com.backend.java.domain.document.CerpenIndex;
 import com.backend.java.repository.elasticsearch.CerpenElasticsearchRepository;
 import com.backend.java.repository.postgres.AuthorRepository;
 import com.backend.java.repository.postgres.CerpenRepository;
@@ -20,9 +20,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -72,6 +75,14 @@ public class CerpenServiceImpl implements CerpenService {
         return StreamSupport.stream(data.spliterator(), false)
                 .map(this::toCerpenResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CerpenResponseDTO getDetailCerpen(UUID id) {
+        var data = cerpenElasticsearchRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cerpen not found")
+                );
+        return toCerpenResponse(data);
     }
 
     private CerpenResponseDTO toCerpenResponse(CerpenIndex cerpen) {

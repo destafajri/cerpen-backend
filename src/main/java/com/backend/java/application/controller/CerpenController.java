@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -70,6 +71,22 @@ public class CerpenController {
                         .sortBy(sortBy)
                         .orderType(sortOrder)
                         .build())
+                .data(data)
+                .build(),
+                HttpStatus.OK);
+    }
+
+    @GetMapping(
+            path = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseData<CerpenResponseDTO>> getDetailCerpen(
+            @PathVariable("id") UUID id) {
+        var data = cerpenService.getDetailCerpen(id);
+
+        return new ResponseEntity<>(ResponseData.<CerpenResponseDTO>builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Success get detail cerpen")
                 .data(data)
                 .build(),
                 HttpStatus.OK);

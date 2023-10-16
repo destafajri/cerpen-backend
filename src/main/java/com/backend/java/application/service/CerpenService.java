@@ -5,6 +5,7 @@ import com.backend.java.application.dto.CerpenListByIdRequestDTO;
 import com.backend.java.application.dto.CerpenResponseDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface CerpenService {
 
@@ -15,4 +16,6 @@ public interface CerpenService {
                                               Integer limit,
                                               String sortBy,
                                               String sortOrder);
+
+    CerpenResponseDTO getDetailCerpen(UUID id);
 }
