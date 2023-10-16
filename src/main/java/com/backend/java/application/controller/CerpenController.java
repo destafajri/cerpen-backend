@@ -113,4 +113,23 @@ public class CerpenController {
                 .build(),
                 HttpStatus.OK);
     }
+
+    @DeleteMapping(
+            path = "/delete/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('AUTHOR')")
+    public ResponseEntity<ResponseData<CerpenResponseDTO>> deleteCerpen(
+            @RequestHeader(name = "Authorization") String token,
+            @PathVariable("id") UUID cerpenId) {
+
+        var username = jwtClaimsService.extractUsername(token);
+        cerpenService.deleteCerpen(username, cerpenId);
+
+        return new ResponseEntity<>(ResponseData.<CerpenResponseDTO>builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Success delete cerpen with id " + cerpenId)
+                .build(),
+                HttpStatus.OK);
+    }
 }

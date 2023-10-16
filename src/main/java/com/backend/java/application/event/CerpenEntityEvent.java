@@ -1,18 +1,16 @@
 package com.backend.java.application.event;
 
 import com.backend.java.domain.entities.CerpenEntity;
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
-public class CerpenCreatedEvent extends ApplicationEvent {
+public class CerpenEntityEvent extends ApplicationEvent {
 
+    @Getter
     private final CerpenEntity cerpenEntity;
 
-    public CerpenCreatedEvent(Object source, CerpenEntity cerpenEntity) {
+    public CerpenEntityEvent(Object source, CerpenEntity cerpenEntity) {
         super(source);
         this.cerpenEntity = cerpenEntity;
-    }
-
-    public CerpenEntity getCreatedCerpen() {
-        return cerpenEntity;
     }
 }

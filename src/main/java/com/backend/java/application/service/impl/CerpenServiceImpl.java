@@ -4,7 +4,7 @@ import com.backend.java.application.dto.CerpenCreateRequestDTO;
 import com.backend.java.application.dto.CerpenListByIdRequestDTO;
 import com.backend.java.application.dto.CerpenResponseDTO;
 import com.backend.java.application.dto.UpdateCerpenDTO;
-import com.backend.java.application.event.CerpenCreatedEvent;
+import com.backend.java.application.event.CerpenEntityEvent;
 import com.backend.java.application.exception.ValidationService;
 import com.backend.java.application.service.CerpenService;
 import com.backend.java.domain.document.CerpenIndex;
@@ -59,7 +59,7 @@ public class CerpenServiceImpl implements CerpenService {
         cerpenRepository.save(cerpenEntity);
 
         // Publish the custom event
-        eventPublisher.publishEvent(new CerpenCreatedEvent(this, cerpenEntity));
+        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity));
     }
 
     @Override
@@ -111,7 +111,22 @@ public class CerpenServiceImpl implements CerpenService {
         cerpenRepository.save(cerpenEntity);
 
         // Publish the custom event
-        eventPublisher.publishEvent(new CerpenCreatedEvent(this, cerpenEntity));
+        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity));
+    }
+
+    @Override
+    @Transactional
+    public void deleteCerpen(String username, UUID cerpenId) {
+        AuthorEntity author = authorRepository.findAuthorByUsername(username);
+        var cerpenEntity = cerpenRepository.findById(cerpenId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cerpen Not Found"));
+
+        if (cerpenEntity.getAuthor() != (author)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to edit this cerpen");
+        }
+
+//        cerpenRepository.delete(cerpenEntity);
+//        eventPublisher.publishEvent(cerpenEntity);
     }
 
     private CerpenResponseDTO toCerpenResponse(CerpenIndex cerpen) {

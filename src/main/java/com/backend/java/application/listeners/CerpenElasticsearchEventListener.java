@@ -1,6 +1,6 @@
 package com.backend.java.application.listeners;
 
-import com.backend.java.application.event.CerpenCreatedEvent;
+import com.backend.java.application.event.CerpenEntityEvent;
 import com.backend.java.domain.document.CerpenIndex;
 import com.backend.java.domain.entities.CerpenEntity;
 import com.backend.java.repository.elasticsearch.CerpenElasticsearchRepository;
@@ -21,10 +21,10 @@ public class CerpenElasticsearchEventListener {
     private final CerpenElasticsearchRepository elasticsearchRepository;
 
     @EventListener
-    public void handleNewDataEvent(CerpenCreatedEvent event) {
+    public void handleNewDataEvent(CerpenEntityEvent event) {
         try {
             // Get the newly created data from the event
-            var newDataCerpen = event.getCreatedCerpen();
+            var newDataCerpen = event.getCerpenEntity();
 
             // ConvertUtils the NewData to CerpenIndex
             CerpenIndex cerpenIndex = convertToCerpenIndex(newDataCerpen);
