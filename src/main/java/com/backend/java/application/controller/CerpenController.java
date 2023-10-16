@@ -3,6 +3,7 @@ package com.backend.java.application.controller;
 import com.backend.java.application.dto.CerpenCreateRequestDTO;
 import com.backend.java.application.dto.CerpenListByIdRequestDTO;
 import com.backend.java.application.dto.CerpenResponseDTO;
+import com.backend.java.application.dto.UpdateCerpenDTO;
 import com.backend.java.application.security.JwtClaimsService;
 import com.backend.java.application.service.CerpenService;
 import com.backend.java.domain.model.MetadataResponse;
@@ -88,6 +89,27 @@ public class CerpenController {
                 .status(HttpStatus.OK)
                 .message("Success get detail cerpen")
                 .data(data)
+                .build(),
+                HttpStatus.OK);
+    }
+
+    @PutMapping(
+            path = "/update/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('AUTHOR')")
+    public ResponseEntity<ResponseData<CerpenResponseDTO>> updateCerpen(
+            @RequestHeader(name = "Authorization") String token,
+            @PathVariable("id") UUID cerpenId,
+            @RequestBody @Valid UpdateCerpenDTO dto) {
+
+        var username = jwtClaimsService.extractUsername(token);
+        cerpenService.updateCerpen(username, cerpenId, dto);
+
+        return new ResponseEntity<>(ResponseData.<CerpenResponseDTO>builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Success update cerpen")
                 .build(),
                 HttpStatus.OK);
     }
