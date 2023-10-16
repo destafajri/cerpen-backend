@@ -39,7 +39,7 @@ public class CerpenElasticsearchEventListener {
             log.info("Event New Data called....");
         } catch (Exception e) {
             e.printStackTrace();
-            new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when insert/update into elasticsearch");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when insert/update into elasticsearch");
         }
     }
 
@@ -59,7 +59,7 @@ public class CerpenElasticsearchEventListener {
             log.info("Event Delete Data called....");
         } catch (Exception e) {
             e.printStackTrace();
-            new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when delete data into elasticsearch");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when delete data into elasticsearch");
         }
     }
 
