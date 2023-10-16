@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.server.ResponseStatusException;
 
 @Component
@@ -20,10 +22,9 @@ public class CerpenElasticsearchEventListener {
     @Autowired
     private final CerpenElasticsearchRepository elasticsearchRepository;
 
-    @EventListener(condition = "#event.eventMethod == " +
-            "T(com.backend.java.application.event.EventMethod).CREATE ||" +
-            " #event.eventMethod == " +
-            "T(com.backend.java.application.event.EventMethod).UPDATE")
+    @EventListener(condition = "#event.eventMethod == T(com.backend.java.application.event.EventMethod).CREATE ||" +
+            " #event.eventMethod == T(com.backend.java.application.event.EventMethod).UPDATE")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleNewDataEvent(CerpenEntityEvent event) {
         try {
             // Get the newly created data from the event
@@ -38,11 +39,12 @@ public class CerpenElasticsearchEventListener {
             log.info("Event New Data called....");
         } catch (Exception e) {
             e.printStackTrace();
-            new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when insert into elasticsearch");
+            new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when insert/update into elasticsearch");
         }
     }
 
     @EventListener(condition = "#event.eventMethod == T(com.backend.java.application.event.EventMethod).DELETE")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleDeleteDataEvent(CerpenEntityEvent event) {
         try {
             // Get the newly created data from the event
@@ -57,7 +59,7 @@ public class CerpenElasticsearchEventListener {
             log.info("Event Delete Data called....");
         } catch (Exception e) {
             e.printStackTrace();
-            new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when insert into elasticsearch");
+            new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error when delete data into elasticsearch");
         }
     }
 
