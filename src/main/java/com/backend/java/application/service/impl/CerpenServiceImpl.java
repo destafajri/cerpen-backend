@@ -79,6 +79,7 @@ public class CerpenServiceImpl implements CerpenService {
     }
 
     @Override
+    @Transactional
     public CerpenResponseDTO getDetailCerpen(UUID id) {
         var data = cerpenElasticsearchRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cerpen not found")
@@ -87,6 +88,7 @@ public class CerpenServiceImpl implements CerpenService {
     }
 
     @Override
+    @Transactional
     public void updateCerpen(String username, UUID cerpenId, UpdateCerpenDTO dto) {
         validationService.validate(dto);
 
