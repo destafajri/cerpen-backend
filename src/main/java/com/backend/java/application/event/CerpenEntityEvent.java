@@ -8,9 +8,12 @@ public class CerpenEntityEvent extends ApplicationEvent {
 
     @Getter
     private final CerpenEntity cerpenEntity;
+    @Getter
+    private final EventMethod eventMethod;
 
-    public CerpenEntityEvent(Object source, CerpenEntity cerpenEntity) {
+    public CerpenEntityEvent(Object source, CerpenEntity cerpenEntity, EventMethod eventMethod) {
         super(source);
         this.cerpenEntity = cerpenEntity;
+        this.eventMethod = eventMethod;
     }
 }

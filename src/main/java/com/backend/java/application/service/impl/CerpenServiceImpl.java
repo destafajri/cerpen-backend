@@ -5,6 +5,7 @@ import com.backend.java.application.dto.CerpenListByIdRequestDTO;
 import com.backend.java.application.dto.CerpenResponseDTO;
 import com.backend.java.application.dto.UpdateCerpenDTO;
 import com.backend.java.application.event.CerpenEntityEvent;
+import com.backend.java.application.event.EventMethod;
 import com.backend.java.application.exception.ValidationService;
 import com.backend.java.application.service.CerpenService;
 import com.backend.java.domain.document.CerpenIndex;
@@ -59,7 +60,7 @@ public class CerpenServiceImpl implements CerpenService {
         cerpenRepository.save(cerpenEntity);
 
         // Publish the custom event
-        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity));
+        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity, EventMethod.CREATE));
     }
 
     @Override
@@ -111,7 +112,7 @@ public class CerpenServiceImpl implements CerpenService {
         cerpenRepository.save(cerpenEntity);
 
         // Publish the custom event
-        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity));
+        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity, EventMethod.UPDATE));
     }
 
     @Override
@@ -125,8 +126,8 @@ public class CerpenServiceImpl implements CerpenService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You're not allowed to edit this cerpen");
         }
 
-//        cerpenRepository.delete(cerpenEntity);
-//        eventPublisher.publishEvent(cerpenEntity);
+        cerpenRepository.delete(cerpenEntity);
+        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity, EventMethod.DELETE));
     }
 
     private CerpenResponseDTO toCerpenResponse(CerpenIndex cerpen) {
