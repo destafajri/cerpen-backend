@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -94,6 +95,17 @@ public class GlobalExceptionHandler {
                         .code(HttpStatus.UNAUTHORIZED.value())
                         .status(HttpStatus.UNAUTHORIZED)
                         .error("Invalid JWT")
+                        .messageError(Collections.singletonList(exception.getMessage()))
+                        .build());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ResponseData<String>> httpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ResponseData.<String>builder()
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .error("Invalid input")
                         .messageError(Collections.singletonList(exception.getMessage()))
                         .build());
     }

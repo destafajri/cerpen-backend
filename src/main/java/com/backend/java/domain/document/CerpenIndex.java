@@ -1,4 +1,4 @@
-package com.backend.java.domain.entities;
+package com.backend.java.domain.document;
 
 import com.backend.java.domain.model.TemaEnum;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
