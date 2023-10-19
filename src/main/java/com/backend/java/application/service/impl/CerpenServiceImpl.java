@@ -56,6 +56,7 @@ public class CerpenServiceImpl implements CerpenService {
         cerpenEntity.setTema(dto.getTema());
         cerpenEntity.setCerpenContains(dto.getCerpenContains());
         cerpenEntity.setCreatedAt(CurrentTimeStamp.getLocalDateTime());
+        cerpenEntity.setUpdatedAt(CurrentTimeStamp.getLocalDateTime());
 
         cerpenRepository.save(cerpenEntity);
 

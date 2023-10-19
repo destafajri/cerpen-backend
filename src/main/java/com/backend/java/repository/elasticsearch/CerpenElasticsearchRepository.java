@@ -12,6 +12,12 @@ import java.util.UUID;
 
 @Repository
 public interface CerpenElasticsearchRepository extends ElasticsearchRepository<CerpenIndex, UUID> {
-    @Query("{\"terms\": {\"_id\": ?0}}")
+    @Query("""
+            {
+                "terms": {
+                    "_id": ?0
+                }
+            }
+            """)
     Page<CerpenIndex> findDocumentsByIds(List<String> ids, Pageable pageable);
 }
