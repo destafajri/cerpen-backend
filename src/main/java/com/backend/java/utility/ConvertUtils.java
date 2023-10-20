@@ -1,13 +1,12 @@
 package com.backend.java.utility;
 
-import com.backend.java.application.dto.CerpenListByIdRequestDTO;
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ConvertUtils {
-    public static ArrayList<String> UUIDListToStringList(CerpenListByIdRequestDTO dto) {
-        return dto.getId().stream()
+    public static ArrayList<String> UUIDListToStringList(List<UUID> dto) {
+        return dto.stream()
                 .map(UUID::toString)
                 .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
     }

@@ -22,8 +22,10 @@ public class CerpenElasticsearchEventListener {
     @Autowired
     private final CerpenElasticsearchRepository elasticsearchRepository;
 
-    @EventListener(condition = "#event.eventMethod == T(com.backend.java.application.event.EventMethod).CREATE ||" +
-            " #event.eventMethod == T(com.backend.java.application.event.EventMethod).UPDATE")
+    @EventListener(condition = """
+            #event.eventMethod == T(com.backend.java.application.event.EventMethod).CREATE ||
+            #event.eventMethod == T(com.backend.java.application.event.EventMethod).UPDATE
+            """)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleNewDataEvent(CerpenEntityEvent event) {
         try {
