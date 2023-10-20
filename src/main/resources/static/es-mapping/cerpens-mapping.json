@@ -5,16 +5,16 @@
     },
     "author_name": {
       "type": "text",
-      "analyzer": "auto_edgram",
+      "analyzer": "autocomplete",
       "search_analyzer": "autocomplete_search"
     },
     "cerpen_contains": {
       "type": "text",
-      "analyzer": "auto_edgram"
+      "analyzer": "autocomplete"
     },
     "tema": {
       "type": "text",
-      "analyzer": "auto_ngram",
+      "analyzer": "autocomplete",
       "search_analyzer": "autocomplete_search"
     },
     "updated_at": {
@@ -32,7 +32,7 @@
     },
     "title": {
       "type": "text",
-      "analyzer": "auto_edgram",
+      "analyzer": "autocomplete",
       "search_analyzer": "autocomplete_search"
     }
   }
