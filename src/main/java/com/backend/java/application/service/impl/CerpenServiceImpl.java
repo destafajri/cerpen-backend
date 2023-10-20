@@ -14,7 +14,6 @@ import com.backend.java.domain.entities.CerpenEntity;
 import com.backend.java.repository.elasticsearch.CerpenElasticsearchRepository;
 import com.backend.java.repository.postgres.AuthorRepository;
 import com.backend.java.repository.postgres.CerpenRepository;
-import com.backend.java.utility.ConvertUtils;
 import com.backend.java.utility.CurrentTimeStamp;
 import com.backend.java.utility.PaginationUtils;
 import jakarta.transaction.Transactional;
@@ -56,6 +55,7 @@ public class CerpenServiceImpl implements CerpenService {
         cerpenEntity.setTema(dto.getTema());
         cerpenEntity.setCerpenContains(dto.getCerpenContains());
         cerpenEntity.setCreatedAt(CurrentTimeStamp.getLocalDateTime());
+        cerpenEntity.setUpdatedAt(CurrentTimeStamp.getLocalDateTime());
 
         cerpenRepository.save(cerpenEntity);
 
@@ -71,11 +71,10 @@ public class CerpenServiceImpl implements CerpenService {
                                                      String sortBy,
                                                      String sortOrder) {
         var pagination = PaginationUtils.createPageable(pageNumber, limit, sortBy, sortOrder);
-        var idString = ConvertUtils.UUIDListToStringList(dto);
-        var data = cerpenElasticsearchRepository.findDocumentsByIds(idString, pagination);
+        var data = cerpenRepository.findCerpenAndAuthorNamesByIds(dto.getId(), pagination);
 
         return StreamSupport.stream(data.spliterator(), false)
-                .map(this::toCerpenResponse)
+                .map(this::toCerpenEntityResponse)
                 .collect(Collectors.toList());
     }
 
@@ -85,7 +84,7 @@ public class CerpenServiceImpl implements CerpenService {
         var data = cerpenElasticsearchRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cerpen not found")
                 );
-        return toCerpenResponse(data);
+        return toCerpenIndexResponse(data);
     }
 
     @Override
@@ -130,10 +129,22 @@ public class CerpenServiceImpl implements CerpenService {
         eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity, EventMethod.DELETE));
     }
 
-    private CerpenResponseDTO toCerpenResponse(CerpenIndex cerpen) {
+    private CerpenResponseDTO toCerpenIndexResponse(CerpenIndex cerpen) {
         return CerpenResponseDTO.builder()
                 .id(cerpen.getId())
                 .authorName(cerpen.getAuthorName())
+                .title(cerpen.getTitle())
+                .tema(cerpen.getTema())
+                .cerpenContains(cerpen.getCerpenContains())
+                .createdAt(cerpen.getCreatedAt())
+                .updatedAt(cerpen.getUpdatedAt())
+                .build();
+    }
+
+    private CerpenResponseDTO toCerpenEntityResponse(CerpenEntity cerpen) {
+        return CerpenResponseDTO.builder()
+                .id(cerpen.getId())
+                .authorName(cerpen.getAuthor().getName())
                 .title(cerpen.getTitle())
                 .tema(cerpen.getTema())
                 .cerpenContains(cerpen.getCerpenContains())
