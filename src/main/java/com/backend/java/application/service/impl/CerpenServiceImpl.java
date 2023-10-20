@@ -74,7 +74,7 @@ public class CerpenServiceImpl implements CerpenService {
         var data = cerpenRepository.findCerpenAndAuthorNamesByIds(dto.getId(), pagination);
 
         return StreamSupport.stream(data.spliterator(), false)
-                .map(this::toCerpenEntityResponse)
+                .map(this::toCerpenResponse)
                 .collect(Collectors.toList());
     }
 
@@ -84,7 +84,7 @@ public class CerpenServiceImpl implements CerpenService {
         var data = cerpenElasticsearchRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cerpen not found")
                 );
-        return toCerpenIndexResponse(data);
+        return toCerpenResponse(data);
     }
 
     @Override
@@ -129,27 +129,39 @@ public class CerpenServiceImpl implements CerpenService {
         eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity, EventMethod.DELETE));
     }
 
-    private CerpenResponseDTO toCerpenIndexResponse(CerpenIndex cerpen) {
+    private CerpenResponseDTO toCerpenResponse(Object cerpen) {
+        if (cerpen instanceof CerpenIndex) {
+            return toCerpenResponseFromIndex((CerpenIndex) cerpen);
+        }
+
+        if (cerpen instanceof CerpenEntity) {
+            return toCerpenResponseFromEntity((CerpenEntity) cerpen);
+        }
+
+        throw new IllegalArgumentException("Invalid cerpen type: " + cerpen.getClass().getName());
+    }
+
+    private CerpenResponseDTO toCerpenResponseFromIndex(CerpenIndex cerpenIndex) {
         return CerpenResponseDTO.builder()
-                .id(cerpen.getId())
-                .authorName(cerpen.getAuthorName())
-                .title(cerpen.getTitle())
-                .tema(cerpen.getTema())
-                .cerpenContains(cerpen.getCerpenContains())
-                .createdAt(cerpen.getCreatedAt())
-                .updatedAt(cerpen.getUpdatedAt())
+                .id(cerpenIndex.getId())
+                .authorName(cerpenIndex.getAuthorName())
+                .title(cerpenIndex.getTitle())
+                .tema(cerpenIndex.getTema())
+                .cerpenContains(cerpenIndex.getCerpenContains())
+                .createdAt(cerpenIndex.getCreatedAt())
+                .updatedAt(cerpenIndex.getUpdatedAt())
                 .build();
     }
 
-    private CerpenResponseDTO toCerpenEntityResponse(CerpenEntity cerpen) {
+    private CerpenResponseDTO toCerpenResponseFromEntity(CerpenEntity cerpenEntity) {
         return CerpenResponseDTO.builder()
-                .id(cerpen.getId())
-                .authorName(cerpen.getAuthor().getName())
-                .title(cerpen.getTitle())
-                .tema(cerpen.getTema())
-                .cerpenContains(cerpen.getCerpenContains())
-                .createdAt(cerpen.getCreatedAt())
-                .updatedAt(cerpen.getUpdatedAt())
+                .id(cerpenEntity.getId())
+                .authorName(cerpenEntity.getAuthor().getName())
+                .title(cerpenEntity.getTitle())
+                .tema(cerpenEntity.getTema())
+                .cerpenContains(cerpenEntity.getCerpenContains())
+                .createdAt(cerpenEntity.getCreatedAt())
+                .updatedAt(cerpenEntity.getUpdatedAt())
                 .build();
     }
 }
