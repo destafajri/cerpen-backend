@@ -3,7 +3,7 @@
 ![Java](https://img.shields.io/badge/Java-17-blue)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.1.4-green)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13.3-blue)
-![Elasticsearch](https://img.shields.io/badge/Elasticsearch-7.10.2-blue)
+![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.10.2-blue)
 ![Docker Compose](https://img.shields.io/badge/Docker%20Compose-3.9-blue)
 
 This is a Cerpen (short story) application built with Java Spring Boot for the backend. The application includes two roles: Admin and Author and implements JWT (JSON Web Tokens) for authentication and authorization. The technology stack includes Java 17, Spring Boot, PostgreSQL for the database, Elasticsearch for text search, and Docker Compose for containerization.

@@ -12,8 +12,10 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 @ComponentScan(basePackages = {"com.backend.java"})
 public class ElasticsearchConfig extends ElasticsearchConfiguration {
 
+    // elasticsearch host
     @Value("${elasticsearch.host}")
     private String HOST;
+    // elasticsearch port
     @Value("${elasticsearch.port}")
     private String PORT;
 
