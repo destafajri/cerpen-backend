@@ -5,32 +5,23 @@
     "refresh_interval": "1s",
     "analysis": {
       "analyzer": {
-        "auto_edgram": {
-          "tokenizer": "ed_gram_token"
-        },
-        "auto_ngram": {
-          "tokenizer": "n_gram_token"
+        "autocomplete": {
+          "type": "custom",
+          "tokenizer": "whitespace",
+          "filter": [
+            "lowercase",
+            "autocomplete_filter"
+          ]
         },
         "autocomplete_search": {
           "tokenizer": "lowercase"
         }
       },
-      "tokenizer": {
-        "ed_gram_token": {
+      "filter": {
+        "autocomplete_filter": {
           "type": "edge_ngram",
-          "min_gram": 2,
-          "max_gram": 10,
-          "token_chars": [
-            "letter"
-          ]
-        },
-        "n_gram_token": {
-          "type": "ngram",
           "min_gram": 3,
-          "max_gram": 4,
-          "token_chars": [
-            "letter"
-          ]
+          "max_gram": 10
         }
       }
     }
