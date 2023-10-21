@@ -54,6 +54,7 @@ public class CerpenServiceImpl implements CerpenService {
         cerpenEntity.setTitle(dto.getTitle());
         cerpenEntity.setTema(dto.getTema());
         cerpenEntity.setCerpenContains(dto.getCerpenContains());
+        cerpenEntity.setIsActive(false);
         cerpenEntity.setCreatedAt(CurrentTimeStamp.getLocalDateTime());
         cerpenEntity.setUpdatedAt(CurrentTimeStamp.getLocalDateTime());
 
@@ -164,6 +165,7 @@ public class CerpenServiceImpl implements CerpenService {
                 .title(cerpenIndex.getTitle())
                 .tema(cerpenIndex.getTema())
                 .cerpenContains(cerpenIndex.getCerpenContains())
+                .isActive(cerpenIndex.getIsActive())
                 .createdAt(cerpenIndex.getCreatedAt())
                 .updatedAt(cerpenIndex.getUpdatedAt())
                 .build();
@@ -176,6 +178,7 @@ public class CerpenServiceImpl implements CerpenService {
                 .title(cerpenEntity.getTitle())
                 .tema(cerpenEntity.getTema())
                 .cerpenContains(cerpenEntity.getCerpenContains())
+                .isActive(cerpenEntity.getIsActive())
                 .createdAt(cerpenEntity.getCreatedAt())
                 .updatedAt(cerpenEntity.getUpdatedAt())
                 .build();

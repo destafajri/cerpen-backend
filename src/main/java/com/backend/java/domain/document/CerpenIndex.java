@@ -37,6 +37,9 @@ public class CerpenIndex {
     @Field(name = "cerpen_contains")
     private String cerpenContains;
 
+    @Field(name = "is_active")
+    private Boolean isActive;
+
     @Field(type = FieldType.Date, name = "created_at")
     private Date createdAt;
 

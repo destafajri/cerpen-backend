@@ -36,7 +36,12 @@ public interface CerpenElasticsearchRepository extends ElasticsearchRepository<C
                                     "cerpen_contains": "?0"
                                 }
                             }
-                        ]
+                        ],
+                        "filter": {
+                            "match": {
+                                "is_active": true
+                            }
+                        }
                     }
             }
             """)
