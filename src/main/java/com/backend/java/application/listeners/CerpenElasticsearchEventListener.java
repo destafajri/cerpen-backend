@@ -73,6 +73,7 @@ public class CerpenElasticsearchEventListener {
         cerpenIndex.setTitle(newData.getTitle());
         cerpenIndex.setTema(newData.getTema());
         cerpenIndex.setCerpenContains(newData.getCerpenContains());
+        cerpenIndex.setIsActive(newData.getIsActive());
         cerpenIndex.setCreatedAt(newData.getCreatedAt());
         cerpenIndex.setUpdatedAt(newData.getUpdatedAt());
 

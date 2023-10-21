@@ -16,6 +16,7 @@ public interface CerpenRepository extends JpaRepository<CerpenEntity, UUID> {
             select c.*, a.name from cerpens c 
                 join authors a on c.author_id = a.id
                     where c.id IN (:ids)
+                    and c.is_active is true
             """, nativeQuery = true)
     Page<CerpenEntity> findCerpenAndAuthorNamesByIds(List<UUID> ids, Pageable pageable);
 }

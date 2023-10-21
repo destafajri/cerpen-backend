@@ -49,6 +49,33 @@ public class CerpenController {
                 HttpStatus.CREATED);
     }
 
+    @GetMapping(
+            path = "/search",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseData<List<CerpenResponseDTO>>> searchCerpen(
+            @RequestParam(name = "q", required = true, defaultValue = "q") String keyword,
+            @RequestParam(name = "page", required = true, defaultValue = "0") Integer pageNumber,
+            @RequestParam(name = "per_page", required = true, defaultValue = "10") Integer limit,
+            @RequestParam(name = "sort_by", required = true, defaultValue = "_score") String sortBy,
+            @RequestParam(name = "order_type", required = true, defaultValue = "desc") String sortOrder) {
+        var data = cerpenService.searchCerpen(keyword, pageNumber, limit, sortBy, sortOrder);
+
+        return new ResponseEntity<>(ResponseData.<List<CerpenResponseDTO>>builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Succes Search Cerpen")
+                .metadata(MetadataResponse.builder()
+                        .page(pageNumber)
+                        .perPage(limit)
+                        .total(data.size())
+                        .sortBy(sortBy)
+                        .orderType(sortOrder)
+                        .build())
+                .data(data)
+                .build(),
+                HttpStatus.OK);
+    }
+
     @PostMapping(
             path = "/list",
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -57,7 +84,7 @@ public class CerpenController {
             @RequestParam(name = "page", required = true, defaultValue = "0") Integer pageNumber,
             @RequestParam(name = "per_page", required = true, defaultValue = "10") Integer limit,
             @RequestParam(name = "sort_by", required = true, defaultValue = "created_at") String sortBy,
-            @RequestParam(name = "order_type", required = true, defaultValue = "asc") String sortOrder,
+            @RequestParam(name = "order_type", required = true, defaultValue = "desc") String sortOrder,
             @RequestBody CerpenListByIdRequestDTO dto) {
         var data = cerpenService.getListCerpenById(dto, pageNumber, limit, sortBy, sortOrder);
 
@@ -78,7 +105,7 @@ public class CerpenController {
     }
 
     @GetMapping(
-            path = "/{id}",
+            path = "/detail/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseData<CerpenResponseDTO>> getDetailCerpen(
             @PathVariable("id") UUID id) {

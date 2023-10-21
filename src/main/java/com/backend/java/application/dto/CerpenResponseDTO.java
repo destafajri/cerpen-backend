@@ -23,6 +23,7 @@ public class CerpenResponseDTO {
     private String title;
     private TemaEnum tema;
     private String cerpenContains;
+    private Boolean isActive;
     private Date createdAt;
     private Date updatedAt;
 }
