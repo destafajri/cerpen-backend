@@ -24,17 +24,17 @@ public class CerpenIndex {
     @Field(name = "author_id")
     private UUID authorId;
 
-    @Field(type = FieldType.Text, name = "author_name")
+    @Field(name = "author_name")
     private String authorName;
 
-    @Field(type = FieldType.Text, name = "title")
+    @Field(name = "title")
     private String title;
 
     @Enumerated(EnumType.STRING)
-    @Field(type = FieldType.Keyword, name = "tema")
+    @Field(name = "tema")
     private TemaEnum tema;
 
-    @Field(type = FieldType.Text, name = "cerpen_contains")
+    @Field(name = "cerpen_contains")
     private String cerpenContains;
 
     @Field(type = FieldType.Date, name = "created_at")

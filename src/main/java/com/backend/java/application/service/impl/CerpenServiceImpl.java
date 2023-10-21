@@ -65,6 +65,22 @@ public class CerpenServiceImpl implements CerpenService {
 
     @Override
     @Transactional
+    public List<CerpenResponseDTO> searchCerpen(String keyword,
+                                                Integer pageNumber,
+                                                Integer limit,
+                                                String sortBy,
+                                                String sortOrder) {
+        var pagination = PaginationUtils.createPageable(pageNumber, limit, sortBy, sortOrder);
+        var data = cerpenElasticsearchRepository.searchCerpen(keyword, pagination);
+
+        log.info(data.toString());
+        return StreamSupport.stream(data.spliterator(), false)
+                .map(this::toCerpenResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
     public List<CerpenResponseDTO> getListCerpenById(CerpenListByIdRequestDTO dto,
                                                      Integer pageNumber,
                                                      Integer limit,
