@@ -141,6 +141,40 @@ public class CerpenController {
                 HttpStatus.OK);
     }
 
+    @PutMapping(
+            path = "/activate/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ResponseData<CerpenResponseDTO>> activateCerpen(
+            @PathVariable("id") UUID cerpenId) {
+
+        cerpenService.activateCerpen(cerpenId);
+
+        return new ResponseEntity<>(ResponseData.<CerpenResponseDTO>builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Success activate cerpen " + cerpenId)
+                .build(),
+                HttpStatus.OK);
+    }
+
+    @PutMapping(
+            path = "/deactivate/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ResponseData<CerpenResponseDTO>> deactivateCerpen(
+            @PathVariable("id") UUID cerpenId) {
+
+        cerpenService.deactivateCerpen(cerpenId);
+
+        return new ResponseEntity<>(ResponseData.<CerpenResponseDTO>builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .message("Success deactivate cerpen " + cerpenId)
+                .build(),
+                HttpStatus.OK);
+    }
+
     @DeleteMapping(
             path = "/delete/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)

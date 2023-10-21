@@ -133,6 +133,34 @@ public class CerpenServiceImpl implements CerpenService {
 
     @Override
     @Transactional
+    public void activateCerpen(UUID cerpenId) {
+        var cerpenEntity = cerpenRepository.findById(cerpenId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cerpen Not Found"));
+
+        cerpenEntity.setIsActive(true);
+
+        cerpenRepository.save(cerpenEntity);
+
+        // Publish the custom event
+        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity, EventMethod.UPDATE));
+    }
+
+    @Override
+    @Transactional
+    public void deactivateCerpen(UUID cerpenId) {
+        var cerpenEntity = cerpenRepository.findById(cerpenId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cerpen Not Found"));
+
+        cerpenEntity.setIsActive(false);
+
+        cerpenRepository.save(cerpenEntity);
+
+        // Publish the custom event
+        eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity, EventMethod.UPDATE));
+    }
+
+    @Override
+    @Transactional
     public void deleteCerpen(String username, UUID cerpenId) {
         AuthorEntity author = authorRepository.findAuthorByUsername(username);
         var cerpenEntity = cerpenRepository.findById(cerpenId)
