@@ -12,6 +12,12 @@ public interface CerpenService {
 
     void createNewCerpen(String username, CerpenCreateRequestDTO dto);
 
+    List<CerpenResponseDTO> searchCerpen(String keyword,
+                                         Integer pageNumber,
+                                         Integer limit,
+                                         String sortBy,
+                                         String sortOrder);
+
     List<CerpenResponseDTO> getListCerpenById(CerpenListByIdRequestDTO dto,
                                               Integer pageNumber,
                                               Integer limit,

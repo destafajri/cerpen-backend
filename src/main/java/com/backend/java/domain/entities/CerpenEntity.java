@@ -33,6 +33,9 @@ public class CerpenEntity {
     @Column(name = "cerpen_contains", length = 1000, nullable = false, unique = true)
     private String cerpenContains;
 
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default false")
+    private Boolean isActive;
+
     @Column(name = "created_at", nullable = false)
     private Timestamp createdAt;
 

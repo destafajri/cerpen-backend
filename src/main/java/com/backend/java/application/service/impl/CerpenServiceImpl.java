@@ -54,6 +54,7 @@ public class CerpenServiceImpl implements CerpenService {
         cerpenEntity.setTitle(dto.getTitle());
         cerpenEntity.setTema(dto.getTema());
         cerpenEntity.setCerpenContains(dto.getCerpenContains());
+        cerpenEntity.setIsActive(false);
         cerpenEntity.setCreatedAt(CurrentTimeStamp.getLocalDateTime());
         cerpenEntity.setUpdatedAt(CurrentTimeStamp.getLocalDateTime());
 
@@ -61,6 +62,22 @@ public class CerpenServiceImpl implements CerpenService {
 
         // Publish the custom event
         eventPublisher.publishEvent(new CerpenEntityEvent(this, cerpenEntity, EventMethod.CREATE));
+    }
+
+    @Override
+    @Transactional
+    public List<CerpenResponseDTO> searchCerpen(String keyword,
+                                                Integer pageNumber,
+                                                Integer limit,
+                                                String sortBy,
+                                                String sortOrder) {
+        var pagination = PaginationUtils.createPageable(pageNumber, limit, sortBy, sortOrder);
+        var data = cerpenElasticsearchRepository.searchCerpen(keyword, pagination);
+
+        log.info(data.toString());
+        return StreamSupport.stream(data.spliterator(), false)
+                .map(this::toCerpenResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -148,6 +165,7 @@ public class CerpenServiceImpl implements CerpenService {
                 .title(cerpenIndex.getTitle())
                 .tema(cerpenIndex.getTema())
                 .cerpenContains(cerpenIndex.getCerpenContains())
+                .isActive(cerpenIndex.getIsActive())
                 .createdAt(cerpenIndex.getCreatedAt())
                 .updatedAt(cerpenIndex.getUpdatedAt())
                 .build();
@@ -160,6 +178,7 @@ public class CerpenServiceImpl implements CerpenService {
                 .title(cerpenEntity.getTitle())
                 .tema(cerpenEntity.getTema())
                 .cerpenContains(cerpenEntity.getCerpenContains())
+                .isActive(cerpenEntity.getIsActive())
                 .createdAt(cerpenEntity.getCreatedAt())
                 .updatedAt(cerpenEntity.getUpdatedAt())
                 .build();
