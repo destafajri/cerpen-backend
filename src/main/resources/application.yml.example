@@ -2,6 +2,7 @@
 logging:
   level:
     '[com.backend.java]': TRACE
+    org.springframework.data.elasticsearch.client.WIRE: TRACE
 
 # configuration
 app:
@@ -14,9 +15,9 @@ spring:
   main:
     allow-circular-references: true
   datasource:
-    url: {db-url}
-    username: {postgresql}
-    password: {password}
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
     driverClassName: org.postgresql.Driver
   jpa:
     show-sql: true
@@ -24,15 +25,15 @@ spring:
       ddl-auto: update
     data:
       elasticsearch:
-        cluster-nodes: http://localhost:9200
-        cluster-name: my-custom-cluster
+        cluster-nodes: ${ELASTICSEARCH_NODES_URL}
+        cluster-name: ${ELASTICSEARCH_CLUSTER_NAME}
         repositories:
           enabled: true
 
 # identify server port running on default environment
 server:
-  port: 9001
+  port: ${PORT}
 
 elasticsearch:
-  host: localhost
-  port: 9200
+  host: ${ELASTICSEARCH_HOST}
+  port: ${ELASTICSEARCH_PORT}
