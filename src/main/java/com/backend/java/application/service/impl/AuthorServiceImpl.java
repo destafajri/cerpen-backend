@@ -39,7 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
         user.setRole(RoleEnum.AUTHOR);
         user.setActive(true);
         user.setCreatedAt(CurrentTimeStamp.getLocalDateTime());
-        author.setUserId(user);
+        author.setUser(user);
         author.setName(payload.getName());
 
         userRepository.save(user);

@@ -28,5 +28,9 @@ public interface CerpenService {
 
     void updateCerpen(String username, UUID cerpenId, UpdateCerpenDTO dto);
 
+    void activateCerpen(UUID cerpenId);
+
+    void deactivateCerpen(UUID cerpenId);
+
     void deleteCerpen(String username, UUID cerpenId);
 }

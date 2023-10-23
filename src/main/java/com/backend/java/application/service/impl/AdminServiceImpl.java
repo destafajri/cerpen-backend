@@ -39,7 +39,7 @@ public class AdminServiceImpl implements AdminService {
         user.setRole(RoleEnum.ADMIN);
         user.setActive(true);
         user.setCreatedAt(CurrentTimeStamp.getLocalDateTime());
-        admin.setUserId(user);
+        admin.setUser(user);
         admin.setName(payload.getName());
 
         userRepository.save(user);
