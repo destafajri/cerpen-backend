@@ -1,8 +1,10 @@
 package com.backend.java.application.service.impl;
 
 import com.backend.java.application.dto.CerpenCreateRequestDTO;
+import com.backend.java.application.dto.CerpenResponseDTO;
 import com.backend.java.application.event.CerpenEntityEvent;
 import com.backend.java.application.exception.ValidationService;
+import com.backend.java.domain.document.CerpenIndex;
 import com.backend.java.domain.entities.AdminEntity;
 import com.backend.java.domain.entities.AuthorEntity;
 import com.backend.java.domain.entities.CerpenEntity;
@@ -13,6 +15,7 @@ import com.backend.java.repository.elasticsearch.CerpenElasticsearchRepository;
 import com.backend.java.repository.postgres.AuthorRepository;
 import com.backend.java.repository.postgres.CerpenRepository;
 import com.backend.java.utility.CurrentTimeStamp;
+import com.backend.java.utility.PaginationUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +24,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -47,6 +55,7 @@ public class CerpenServiceImplTest {
     private AdminEntity adminEntity;
     private AuthorEntity authorEntity;
     private CerpenEntity cerpenEntity;
+    private CerpenIndex cerpenIndex;
 
     @BeforeEach
     public void setUp() {
@@ -72,9 +81,21 @@ public class CerpenServiceImplTest {
                 .title("Test Judul 1")
                 .tema(TemaEnum.DRAMA)
                 .cerpenContains("Test Contains 1")
-                .isActive(false)
+                .isActive(true)
                 .createdAt(CurrentTimeStamp.getLocalDateTime())
-                .updatedAt(CurrentTimeStamp.getLocalDateTime()).build();
+                .updatedAt(CurrentTimeStamp.getLocalDateTime())
+                .build();
+        this.cerpenIndex = CerpenIndex.builder()
+                .id(this.cerpenEntity.getId())
+                .authorId(this.authorEntity.getId())
+                .authorName(this.authorEntity.getName())
+                .title(this.cerpenEntity.getTitle())
+                .tema(this.cerpenEntity.getTema())
+                .cerpenContains(this.cerpenEntity.getCerpenContains())
+                .isActive(this.cerpenEntity.getIsActive())
+                .createdAt(this.cerpenEntity.getCreatedAt())
+                .updatedAt(this.cerpenEntity.getUpdatedAt())
+                .build();
     }
 
     @Test
@@ -107,7 +128,7 @@ public class CerpenServiceImplTest {
         Assertions.assertEquals(cerpenEntity.getAuthor().getUser().getRole(), RoleEnum.AUTHOR);
         Assertions.assertNotNull(cerpenEntity.getId());
         Assertions.assertEquals(cerpenEntity.getAuthor(), authorEntity);
-        Assertions.assertEquals(cerpenEntity.getIsActive(), false);
+        Assertions.assertEquals(cerpenEntity.getIsActive(), true);
 
         // Verify that the necessary methods were called
         verify(validationService).validate(createRequestDTO);
@@ -124,5 +145,36 @@ public class CerpenServiceImplTest {
                 .save(any(CerpenEntity.class));
         verify(eventPublisher, Mockito.times(1))
                 .publishEvent(any(CerpenEntityEvent.class));
+    }
+
+    @Test
+    public void searchCerpen() {
+        // Arrange
+        String keyword = "test";
+        Integer pageNumber = 0;
+        Integer limit = 10;
+        String sortBy = "_score";
+        String sortOrder = "desc";
+
+        Pageable pageable = PaginationUtils.createPageable(pageNumber, limit, sortBy, sortOrder);
+
+        // Mock the behavior of cerpenElasticsearchRepository searchCerpen method
+        List<CerpenIndex> mockSearchResults = Collections.singletonList(cerpenIndex);
+        Page<CerpenIndex> mockPage = new PageImpl<>(mockSearchResults);
+        Mockito.when(cerpenElasticsearchRepository.searchCerpen(keyword, pageable)).thenReturn(mockPage);
+
+        // Action
+        List<CerpenResponseDTO> result = cerpenService.searchCerpen(keyword, pageNumber, limit, sortBy, sortOrder);
+
+        // Assert
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.get(0).getId(), cerpenIndex.getId());
+        Assertions.assertEquals(result.get(0).getId(), cerpenEntity.getId());
+        Assertions.assertEquals(result.get(0).getAuthorName(), cerpenEntity.getAuthor().getName());
+        Assertions.assertEquals(result.get(0).getCerpenContains(), cerpenIndex.getCerpenContains());
+
+        // Verify
+        verify(cerpenElasticsearchRepository, Mockito.times(1))
+                .searchCerpen(keyword, pageable);
     }
 }
