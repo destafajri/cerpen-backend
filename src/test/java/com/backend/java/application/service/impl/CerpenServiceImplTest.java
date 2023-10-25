@@ -3,6 +3,7 @@ package com.backend.java.application.service.impl;
 import com.backend.java.application.dto.CerpenCreateRequestDTO;
 import com.backend.java.application.dto.CerpenListByIdRequestDTO;
 import com.backend.java.application.dto.CerpenResponseDTO;
+import com.backend.java.application.dto.UpdateCerpenDTO;
 import com.backend.java.application.event.CerpenEntityEvent;
 import com.backend.java.application.exception.ValidationService;
 import com.backend.java.domain.document.CerpenIndex;
@@ -56,6 +57,7 @@ public class CerpenServiceImplTest {
     private ApplicationEventPublisher eventPublisher;
 
     private UserEntity userAuthorEntity;
+    private UserEntity userAdminEntity;
     private AdminEntity adminEntity;
     private AuthorEntity authorEntity;
     private CerpenEntity cerpenEntity;
@@ -65,6 +67,20 @@ public class CerpenServiceImplTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
+        this.userAdminEntity = UserEntity.builder()
+                .id(UUID.randomUUID())
+                .username("testAdmin")
+                .email("admintest@yahoo.com")
+                .password("active")
+                .role(RoleEnum.ADMIN)
+                .isActive(true)
+                .createdAt(CurrentTimeStamp.getLocalDateTime())
+                .build();
+        this.adminEntity = AdminEntity.builder()
+                .id(UUID.randomUUID())
+                .user(userAdminEntity)
+                .name("test Unit admin")
+                .build();
         this.userAuthorEntity = UserEntity.builder()
                 .id(UUID.randomUUID())
                 .username("testAuthor")
@@ -267,5 +283,111 @@ public class CerpenServiceImplTest {
         // Verify
         verify(cerpenElasticsearchRepository, Mockito.times(1))
                 .findById(id);
+    }
+
+    @Test
+    public void updateCerpenSuccess() {
+        // Arrange
+        String username = "testAuthor";
+        UUID cerpenId = UUID.randomUUID();
+        UpdateCerpenDTO dto = new UpdateCerpenDTO();
+        dto.setTitle("New Title");
+        dto.setTema(TemaEnum.DRAMA);
+        dto.setCerpenContains("New Contents");
+
+        // mocking data
+        AuthorEntity mockAuthor = this.authorEntity;
+        CerpenEntity mockCerpenEntity = CerpenEntity.builder()
+                .id(cerpenId)
+                .author(mockAuthor)
+                .title(dto.getTitle())
+                .tema(dto.getTema())
+                .cerpenContains(dto.getCerpenContains())
+                .isActive(true)
+                .createdAt(CurrentTimeStamp.getLocalDateTime())
+                .updatedAt(CurrentTimeStamp.getLocalDateTime())
+                .build();
+
+        Mockito.doNothing().when(validationService).validate(dto);
+        Mockito.when(authorRepository.findAuthorByUsername(username)).thenReturn(mockAuthor);
+        Mockito.when(cerpenRepository.findById(eq(cerpenId))).thenReturn(Optional.of(mockCerpenEntity));
+
+        // Act and Assert
+        Assertions.assertDoesNotThrow(() -> cerpenService.updateCerpen(username, cerpenId, dto));
+
+        // Verify
+        verify(validationService, Mockito.times(1)).validate(dto);
+        verify(authorRepository, Mockito.times(1)).findAuthorByUsername("testAuthor");
+        verify(cerpenRepository, Mockito.times(1)).save(any(CerpenEntity.class));
+        verify(eventPublisher, Mockito.times(1)).publishEvent(any(CerpenEntityEvent.class));
+    }
+
+    @Test
+    public void updateCerpenNotFound() {
+        // Arrange
+        String username = "testAuthor";
+        UUID cerpenId = UUID.randomUUID();
+        UpdateCerpenDTO dto = new UpdateCerpenDTO();
+
+        Mockito.doNothing().when(validationService).validate(dto);
+        when(authorRepository.findAuthorByUsername(username)).thenReturn(new AuthorEntity());
+        when(cerpenRepository.findById(eq(cerpenId))).thenReturn(Optional.empty());
+
+        // Act and Assert
+        Assertions.assertThrows(ResponseStatusException.class, () -> cerpenService.updateCerpen(username, cerpenId, dto));
+
+        // Verify
+        verify(authorRepository, Mockito.times(1)).findAuthorByUsername("testAuthor");
+    }
+
+    @Test
+    public void updateCerpenUserNotMatch() {
+        // Arrange
+        String username = "testAuthorNotMatch";
+        UUID cerpenId = UUID.randomUUID();
+        UpdateCerpenDTO dto = new UpdateCerpenDTO();
+        dto.setTitle("New Title");
+        dto.setTema(TemaEnum.DRAMA);
+        dto.setCerpenContains("New Contents");
+
+        // mocking data
+        AuthorEntity mockAuthor = AuthorEntity.builder()
+                .id(UUID.randomUUID())
+                .user(UserEntity.builder()
+                        .username("testAuthorNotMatch")
+                        .email("authortest2@yahoo.com")
+                        .password("active")
+                        .role(RoleEnum.AUTHOR)
+                        .isActive(true)
+                        .createdAt(CurrentTimeStamp.getLocalDateTime())
+                        .build())
+                .name("heheheh")
+                .build();
+        CerpenEntity mockCerpenEntity = CerpenEntity.builder()
+                .id(cerpenId)
+                .author(this.authorEntity)
+                .title(dto.getTitle())
+                .tema(dto.getTema())
+                .cerpenContains(dto.getCerpenContains())
+                .isActive(true)
+                .createdAt(CurrentTimeStamp.getLocalDateTime())
+                .updatedAt(CurrentTimeStamp.getLocalDateTime())
+                .build();
+
+        Mockito.doNothing().when(validationService).validate(dto);
+        Mockito.when(authorRepository.findAuthorByUsername(username)).thenReturn(mockAuthor);
+        Mockito.when(authorRepository.findAuthorByUsername("testAuthor")).thenReturn(this.authorEntity);
+        Mockito.when(cerpenRepository.findById(eq(cerpenId))).thenReturn(Optional.of(mockCerpenEntity));
+
+        // act and assertion
+        Assertions.assertThrows(ResponseStatusException.class,
+                () -> cerpenService.updateCerpen(username, cerpenId, dto)
+        );
+
+        // Verify
+        verify(validationService, Mockito.times(1)).validate(dto);
+        verify(authorRepository, Mockito.times(1)).findAuthorByUsername(username);
+        verify(cerpenRepository, Mockito.times(0)).save(any(CerpenEntity.class));
+        verify(eventPublisher, Mockito.times(0)).publishEvent(any(CerpenEntityEvent.class));
     }
 }
