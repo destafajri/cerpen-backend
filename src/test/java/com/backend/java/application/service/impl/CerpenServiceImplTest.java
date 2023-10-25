@@ -29,6 +29,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
@@ -389,5 +390,107 @@ public class CerpenServiceImplTest {
         verify(authorRepository, Mockito.times(1)).findAuthorByUsername(username);
         verify(cerpenRepository, Mockito.times(0)).save(any(CerpenEntity.class));
         verify(eventPublisher, Mockito.times(0)).publishEvent(any(CerpenEntityEvent.class));
+    }
+
+    @Test
+    public void activateCerpen() {
+        // arrange
+        var cerpenId = UUID.randomUUID();
+
+        // mockdata
+        CerpenEntity mockCerpen = CerpenEntity.builder()
+                .id(cerpenId)
+                .author(this.authorEntity)
+                .title(this.cerpenEntity.getTitle())
+                .tema(this.cerpenEntity.getTema())
+                .cerpenContains(this.cerpenEntity.getCerpenContains())
+                .isActive(false)
+                .createdAt(CurrentTimeStamp.getLocalDateTime())
+                .updatedAt(CurrentTimeStamp.getLocalDateTime())
+                .build();
+
+        when(cerpenRepository.findById(cerpenId)).thenReturn(Optional.of(mockCerpen));
+
+        // Act
+        cerpenService.activateCerpen(cerpenId);
+
+        // Assertion
+        Assertions.assertTrue(mockCerpen.getIsActive());
+
+        // Verify
+        verify(cerpenRepository, Mockito.times(1)).save(mockCerpen);
+        verify(eventPublisher, Mockito.times(1)).publishEvent(any(CerpenEntityEvent.class));
+    }
+
+    @Test
+    public void activateCerpenNotFound() {
+        // arr
+        var cerpenId = UUID.randomUUID();
+
+        // Mock the behavior of the repository to return an empty Optional when findById is called
+        Mockito.when(cerpenRepository.findById(cerpenId)).thenReturn(Optional.empty());
+
+        // Verify that calling activateCerpen with an unknown cerpenId results in a ResponseStatusException
+        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class,
+                () -> cerpenService.activateCerpen(cerpenId)
+        );
+        // another verify
+        verify(cerpenRepository, Mockito.times(0)).save(any(CerpenEntity.class));
+        verify(eventPublisher, Mockito.times(0)).publishEvent(any(CerpenEntityEvent.class));
+
+        // Assert
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        Assertions.assertEquals("Cerpen Not Found", exception.getReason());
+    }
+
+    @Test
+    public void deactivateCerpen() {
+        // arrange
+        var cerpenId = UUID.randomUUID();
+
+        // mockdata
+        CerpenEntity mockCerpen = CerpenEntity.builder()
+                .id(cerpenId)
+                .author(this.authorEntity)
+                .title(this.cerpenEntity.getTitle())
+                .tema(this.cerpenEntity.getTema())
+                .cerpenContains(this.cerpenEntity.getCerpenContains())
+                .isActive(true)
+                .createdAt(CurrentTimeStamp.getLocalDateTime())
+                .updatedAt(CurrentTimeStamp.getLocalDateTime())
+                .build();
+
+        when(cerpenRepository.findById(cerpenId)).thenReturn(Optional.of(mockCerpen));
+
+        // Act
+        cerpenService.deactivateCerpen(cerpenId);
+
+        // Assertion
+        Assertions.assertFalse(mockCerpen.getIsActive());
+
+        // Verify
+        verify(cerpenRepository, Mockito.times(1)).save(mockCerpen);
+        verify(eventPublisher, Mockito.times(1)).publishEvent(any(CerpenEntityEvent.class));
+    }
+
+    @Test
+    public void deactivateCerpenNotFound() {
+        // arr
+        var cerpenId = UUID.randomUUID();
+
+        // Mock the behavior of the repository to return an empty Optional when findById is called
+        Mockito.when(cerpenRepository.findById(cerpenId)).thenReturn(Optional.empty());
+
+        // Verify that calling deactivateCerpen with an unknown cerpenId results in a ResponseStatusException
+        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class,
+                () -> cerpenService.deactivateCerpen(cerpenId)
+        );
+        // Another verify
+        verify(cerpenRepository, Mockito.times(0)).save(any(CerpenEntity.class));
+        verify(eventPublisher, Mockito.times(0)).publishEvent(any(CerpenEntityEvent.class));
+
+        // Assert
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        Assertions.assertEquals("Cerpen Not Found", exception.getReason());
     }
 }
