@@ -1,6 +1,7 @@
 package com.backend.java.application.service.impl;
 
 import com.backend.java.application.dto.CerpenCreateRequestDTO;
+import com.backend.java.application.dto.CerpenListByIdRequestDTO;
 import com.backend.java.application.dto.CerpenResponseDTO;
 import com.backend.java.application.event.CerpenEntityEvent;
 import com.backend.java.application.exception.ValidationService;
@@ -176,5 +177,51 @@ public class CerpenServiceImplTest {
         // Verify
         verify(cerpenElasticsearchRepository, Mockito.times(1))
                 .searchCerpen(keyword, pageable);
+    }
+
+    @Test
+    public void getListCerpenById() {
+        // Arrange
+        CerpenListByIdRequestDTO dto = new CerpenListByIdRequestDTO();
+        dto.setId(List.of(this.cerpenEntity.getId(), UUID.randomUUID()));
+        Integer pageNumber = 0;
+        Integer limit = 10;
+        String sortBy = "_score";
+        String sortOrder = "asc";
+
+        Pageable pageable = PaginationUtils.createPageable(pageNumber, limit, sortBy, sortOrder);
+
+        // Mock the behavior of cerpenRepository findCerpenAndAuthorNamesByIds method
+        List<CerpenEntity> mockCerpenData = List.of(
+                this.cerpenEntity,
+                CerpenEntity.builder()
+                        .id(dto.getId().get(1))
+                        .author(this.authorEntity)
+                        .title("Test Judul 2")
+                        .tema(TemaEnum.HORROR)
+                        .cerpenContains("Test Contains 2")
+                        .isActive(true)
+                        .createdAt(CurrentTimeStamp.getLocalDateTime())
+                        .updatedAt(CurrentTimeStamp.getLocalDateTime())
+                        .build()
+        );
+
+        Page<CerpenEntity> mockPage = new PageImpl<>(mockCerpenData);
+        Mockito.when(cerpenRepository.findCerpenAndAuthorNamesByIds(dto.getId(), pageable)).thenReturn(mockPage);
+
+        // Act
+        List<CerpenResponseDTO> result = cerpenService.getListCerpenById(dto, pageNumber, limit, sortBy, sortOrder);
+
+        // Assert
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(dto.getId().get(1), result.get(1).getId());
+        Assertions.assertEquals("Test Contains 1", result.get(0).getCerpenContains());
+        Assertions.assertEquals("Test Contains 2", result.get(1).getCerpenContains());
+        Assertions.assertEquals(cerpenEntity.getTema(), result.get(0).getTema());
+        Assertions.assertNotEquals(cerpenEntity.getTema(), result.get(1).getTema());
+
+        // Verify
+        verify(cerpenRepository, Mockito.times(1))
+                .findCerpenAndAuthorNamesByIds(dto.getId(), pageable);
     }
 }
