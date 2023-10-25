@@ -28,12 +28,15 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -223,5 +226,46 @@ public class CerpenServiceImplTest {
         // Verify
         verify(cerpenRepository, Mockito.times(1))
                 .findCerpenAndAuthorNamesByIds(dto.getId(), pageable);
+    }
+
+    @Test
+    public void getDetailCerpen() {
+        // Arrange
+        UUID id = cerpenEntity.getId(); // Replace with a valid UUID for your test
+
+        // mocking data
+        when(cerpenElasticsearchRepository.findById(eq(id))).thenReturn(Optional.of(this.cerpenIndex));
+
+        // Act
+        CerpenResponseDTO result = cerpenService.getDetailCerpen(id);
+
+        // Assert
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(this.cerpenIndex.getId(), result.getId());
+
+        // Verify
+        verify(cerpenElasticsearchRepository, Mockito.times(1))
+                .findById(id);
+
+        // Another Assert
+        Assertions.assertDoesNotThrow(() -> cerpenService.getDetailCerpen(cerpenEntity.getId()));
+
+        // Verify
+        verify(cerpenElasticsearchRepository, Mockito.times(2))
+                .findById(id);
+    }
+
+    @Test
+    public void getDetailCerpenNotFound() {
+        // Arrange
+        UUID id = UUID.randomUUID();
+        when(cerpenElasticsearchRepository.findById(eq(id))).thenReturn(Optional.empty());
+
+        // Act and Assert
+        Assertions.assertThrows(ResponseStatusException.class, () -> cerpenService.getDetailCerpen(id));
+
+        // Verify
+        verify(cerpenElasticsearchRepository, Mockito.times(1))
+                .findById(id);
     }
 }
