@@ -6,7 +6,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.*;
 
 import java.util.Date;
@@ -14,6 +17,9 @@ import java.util.UUID;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Setting(settingPath = "static/es-setting/cerpens-setting.json")
 @Mapping(mappingPath = "static/es-mapping/cerpens-mapping.json")
 @Document(indexName = "cerpens")
