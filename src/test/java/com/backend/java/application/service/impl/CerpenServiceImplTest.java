@@ -493,4 +493,93 @@ public class CerpenServiceImplTest {
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         Assertions.assertEquals("Cerpen Not Found", exception.getReason());
     }
+
+    @Test
+    public void deleteCerpen() {
+        // Arrange
+        String username = "testAuthor";
+        UUID cerpenId = UUID.randomUUID();
+
+        // mocking data
+        AuthorEntity mockAuthor = this.authorEntity;
+        CerpenEntity mockCerpenEntity = CerpenEntity.builder()
+                .id(cerpenId)
+                .author(this.authorEntity)
+                .title(this.cerpenEntity.getTitle())
+                .tema(this.cerpenEntity.getTema())
+                .cerpenContains(this.cerpenEntity.getCerpenContains())
+                .isActive(true)
+                .createdAt(CurrentTimeStamp.getLocalDateTime())
+                .updatedAt(CurrentTimeStamp.getLocalDateTime())
+                .build();
+
+        when(authorRepository.findAuthorByUsername(username)).thenReturn(mockAuthor);
+        when(cerpenRepository.findById(eq(cerpenId))).thenReturn(Optional.of(mockCerpenEntity));
+
+        // act
+        cerpenService.deleteCerpen(username, cerpenId);
+
+        // Verify
+        verify(authorRepository, Mockito.times(1)).findAuthorByUsername(username);
+        verify(cerpenRepository, Mockito.times(1)).delete(any(CerpenEntity.class));
+        verify(eventPublisher, Mockito.times(1)).publishEvent(any(CerpenEntityEvent.class));
+    }
+
+    @Test
+    public void deleteCerpenNotFound() {
+        // Arrange
+        String username = "testAuthor";
+        UUID cerpenId = UUID.randomUUID();
+
+        when(authorRepository.findAuthorByUsername(username)).thenReturn(new AuthorEntity());
+        when(cerpenRepository.findById(eq(cerpenId))).thenReturn(Optional.empty());
+
+        // Act and Assert
+        var exception = Assertions.assertThrows(ResponseStatusException.class,
+                () -> cerpenService.deleteCerpen(username, cerpenId));
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        Assertions.assertEquals("Cerpen Not Found", exception.getReason());
+
+        // Verify
+        verify(authorRepository, Mockito.times(1)).findAuthorByUsername("testAuthor");
+        verify(cerpenRepository, Mockito.times(0)).delete(any(CerpenEntity.class));
+        verify(eventPublisher, Mockito.times(0)).publishEvent(any(CerpenEntityEvent.class));
+    }
+
+    @Test
+    public void deletCerpenUsernameNotMatch() {
+        // Arrange
+        String username = "testAuthorNotMatch";
+        UUID cerpenId = UUID.randomUUID();
+
+        // mocking data
+        AuthorEntity mockAuthor = AuthorEntity.builder()
+                .id(UUID.randomUUID())
+                .user(UserEntity.builder()
+                        .username("testAuthorNotMatch")
+                        .email("authortest2@yahoo.com")
+                        .password("active")
+                        .role(RoleEnum.AUTHOR)
+                        .isActive(true)
+                        .createdAt(CurrentTimeStamp.getLocalDateTime())
+                        .build())
+                .name("heheheh")
+                .build();
+
+        Mockito.when(authorRepository.findAuthorByUsername(username)).thenReturn(mockAuthor);
+        Mockito.when(authorRepository.findAuthorByUsername("testAuthor")).thenReturn(this.authorEntity);
+        Mockito.when(cerpenRepository.findById(eq(cerpenId))).thenReturn(Optional.of(this.cerpenEntity));
+
+        // act and assertion
+        var exception = Assertions.assertThrows(ResponseStatusException.class,
+                () -> cerpenService.deleteCerpen(username, cerpenId)
+        );
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        Assertions.assertEquals("You're not allowed to edit this cerpen", exception.getReason());
+
+        // Verify
+        verify(authorRepository, Mockito.times(1)).findAuthorByUsername(username);
+        verify(cerpenRepository, Mockito.times(0)).delete(any(CerpenEntity.class));
+        verify(eventPublisher, Mockito.times(0)).publishEvent(any(CerpenEntityEvent.class));
+    }
 }
