@@ -20,7 +20,7 @@ spring:
     password: ${POSTGRES_PASSWORD}
     driverClassName: org.postgresql.Driver
   elasticsearch:
-    uris: [${ELASTICSEARCH_NODES_URL}]
+    uris: ${ELASTICSEARCH_NODES_URL}
     username: ${ELASTICSEARCH_USERNAME}
     password: ${ELASTICSEARCH_PASSWORD}
   jpa:
