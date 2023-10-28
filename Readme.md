@@ -78,3 +78,6 @@ To get started with this project, follow these steps:
 
 3. Build and run the application.
 
+## API Endpoints
+
+You can access the Postman collection for this project [here](https://gold-station-218460.postman.co/workspace/Desta-Java~557fe1be-df97-4ea7-a026-ddb86c919e47/collection/22138766-d10db559-036a-451d-b2f0-ecab9f04ccee?action=share&creator=22138766).
