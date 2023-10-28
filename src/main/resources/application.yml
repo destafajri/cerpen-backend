@@ -1,16 +1,13 @@
-# logging
+server:
+  port: 8080
 logging:
   level:
     '[com.backend.java]': TRACE
     org.springframework.data.elasticsearch.client.WIRE: TRACE
-
-# configuration
 app:
   timezone: Asia/Jakarta
 credential:
   APIkey: ${SECRET_KEY}
-
-# database source
 spring:
   main:
     allow-circular-references: true
@@ -31,7 +28,3 @@ spring:
       elasticsearch:
         repositories:
           enabled: true
-
-# identify server port running on default environment
-server:
-  port: 8080
