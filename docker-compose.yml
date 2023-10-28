@@ -13,7 +13,9 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/your_db_name
       SPRING_DATASOURCE_USERNAME: your_db_username
       SPRING_DATASOURCE_PASSWORD: your_db_password
-      SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES: http://elasticsearch:9200
+      SPRING_ELASTICSEARCH_URIS: http://elasticsearch:9200
+      SPRING_ELASTICSEARCH_USERNAME: elastic
+      SPRING_ELASTICSEARCH_PASSWORD: password
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
@@ -24,9 +26,9 @@ services:
     environment:
       - "discovery.type=single-node"  # Run Elasticsearch as a single node
       - "cluster.name=my-custom-cluster"  # Specify a custom cluster name
-      - "xpack.security.enabled=false"  # Disable security
-#      - "xpack.security.user=your-username:your-password"
-    tty: true
+      - "xpack.security.enabled=true"  # Enable security
+      - "xpack.security.authc.anonymous.username=elastic"
+      - "ELASTIC_PASSWORD=password"
 
   postgres:
     image: postgres:13
