@@ -23,17 +23,13 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-    data:
-      elasticsearch:
-        cluster-nodes: ${ELASTICSEARCH_NODES_URL}
-        cluster-name: ${ELASTICSEARCH_CLUSTER_NAME}
-        repositories:
-          enabled: true
+  data:
+    elasticsearch:
+      cluster-nodes: ${ELASTICSEARCH_NODES_URL}
+      cluster-name: ${ELASTICSEARCH_CLUSTER_NAME}
+      repositories:
+        enabled: true
 
 # identify server port running on default environment
 server:
   port: ${PORT}
-
-elasticsearch:
-  host: ${ELASTICSEARCH_HOST}
-  port: ${ELASTICSEARCH_PORT}
