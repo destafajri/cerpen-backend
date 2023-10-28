@@ -8,19 +8,15 @@
 
 This is a Cerpen (short story) application built with Java Spring Boot for the backend. The application includes two roles: Admin and Author and implements JWT (JSON Web Tokens) for authentication and authorization. The technology stack includes Java 17, Spring Boot, PostgreSQL for the database, Elasticsearch for text search, and Docker Compose for containerization.
 
+You can access the project [here](https://java-springboot-cerpen.onrender.com/).
 ## Table of Contents
 
-- [Project Overview](#project-overview)
 - [Database Schema](#database-schema)
 - [Getting Started](#getting-started)
 - [Authentication](#authentication)
 - [API Endpoints](#api-endpoints)
 - [Contributing](#contributing)
 - [License](#license)
-
-## Project Overview
-
-Provide a brief overview of your project here, including its purpose and any unique features. You can also include a high-level architecture diagram if available.
 
 ## Database Schema
 
@@ -82,3 +78,8 @@ To get started with this project, follow these steps:
 
 3. Build and run the application.
 
+## API Endpoints
+
+You can access the Postman collection for this project
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://www.postman.com/gold-station-218460/workspace/cerpen-app-java/collection/22138766-d10db559-036a-451d-b2f0-ecab9f04ccee?action=share&creator=22138766)
