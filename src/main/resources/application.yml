@@ -31,3 +31,7 @@ spring:
       elasticsearch:
         repositories:
           enabled: true
+
+# identify server port running on default environment
+server:
+  port: ${PORT}
