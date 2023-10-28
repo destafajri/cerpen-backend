@@ -19,16 +19,18 @@ spring:
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
     driverClassName: org.postgresql.Driver
+  elasticsearch:
+    uris: ${ELASTICSEARCH_NODES_URL}
+    username: ${ELASTICSEARCH_USERNAME}
+    password: ${ELASTICSEARCH_PASSWORD}
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
-  data:
-    elasticsearch:
-      cluster-nodes: ${ELASTICSEARCH_NODES_URL}
-      cluster-name: ${ELASTICSEARCH_CLUSTER_NAME}
-      repositories:
-        enabled: true
+    data:
+      elasticsearch:
+        repositories:
+          enabled: true
 
 # identify server port running on default environment
 server:
