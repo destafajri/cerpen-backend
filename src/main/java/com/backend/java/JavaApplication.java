@@ -11,7 +11,7 @@ public class JavaApplication {
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(JavaApplication.class);
 		String port = System.getenv("PORT");
-		app.setDefaultProperties(Collections.singletonMap("server.port", port == null ? "9001" : port));
+		app.setDefaultProperties(Collections.singletonMap("server.port", port == null ? "8080" : port));
 		app.run(args);
 	}
 
