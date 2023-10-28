@@ -34,4 +34,4 @@ spring:
 
 # identify server port running on default environment
 server:
-  port: 8080
+  port: 9001
