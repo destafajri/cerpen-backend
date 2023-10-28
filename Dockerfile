@@ -8,5 +8,4 @@ RUN mvn install
 # Stage 2: Create the final Docker image
 FROM openjdk:17-jdk-alpine
 COPY --from=build /app/target/*.jar app.jar
-EXPOSE $PORT
 ENTRYPOINT ["java", "-jar", "/app.jar"]
