@@ -1,11 +1,18 @@
-# Stage 1: Build the JAR file using Maven
-FROM maven:3.8.4-openjdk-17-slim AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package
+FROM eclipse-temurin:17-jdk-alpine as build
+WORKDIR /workspace/app
 
-# Stage 2: Create the final Docker image
-FROM openjdk:17-jdk-alpine
-COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
+
+RUN ./mvnw install -DskipTests
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+
+FROM eclipse-temurin:17-jdk-alpine
+VOLUME /tmp
+ARG DEPENDENCY=/workspace/app/target/dependency
+COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
+COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","app:app/lib/*","hello.Application"]
