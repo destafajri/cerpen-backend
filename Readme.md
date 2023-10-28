@@ -65,6 +65,7 @@ Here's an overview of the database schema for this project:
 | title          | VARCHAR(255) | NOT NULL, UNIQUE    |
 | tema           | VARCHAR(255) | NOT NULL            |
 | cerpen_contains | TEXT        | NOT NULL, UNIQUE    |
+| is_active   | BOOLEAN    | NOT NULL              |
 | created_at     | TIMESTAMP    | NOT NULL            |
 | updated_at     | TIMESTAMP    |                     |
 
@@ -75,7 +76,7 @@ To get started with this project, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/destafajri/cerpen-backend.git
+   git clone https://github.com/destafajri/java-springboot-cerpen-backend
     ```
 2. Set up the database (PostgreSQL and Elasticsearch) and configure the application.yml.
 
