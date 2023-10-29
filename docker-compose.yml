@@ -4,26 +4,37 @@ services:
     build:
       context: .  # Use the current directory as the build context
       dockerfile: Dockerfile  # Use the Dockerfile in the current directory
+    container_name: springboot-application
+    expose:
+      - 8080
     ports:
-      - "9001:9001"  # Map your Spring Boot app's port to the host
+      - "8080:8080"  # Map your Spring Boot app's port to the host
     depends_on:
       - elasticsearch
       - postgres
+    restart: on-failure
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/your_db_name
-      SPRING_DATASOURCE_USERNAME: your_db_username
-      SPRING_DATASOURCE_PASSWORD: your_db_password
-      SPRING_ELASTICSEARCH_URIS: http://elasticsearch:9200
-      SPRING_ELASTICSEARCH_USERNAME: elastic
-      SPRING_ELASTICSEARCH_PASSWORD: password
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url": "jdbc:postgresql://postgres:5432/your_db_name?user=your_db_username&password=your_db_password",
+        "spring.datasource.username": "your_db_username",
+        "spring.datasource.password": "your_db_password",
+        "spring.datasource.driverClassName": "org.postgresql.Driver",
+        "spring.jpa.hibernate.ddl-auto": "update",
+        "spring.elasticsearch.uris": "http://elasticsearch:9200",
+        "spring.elasticsearch.username": "elastic",
+        "spring.elasticsearch.password": "password"
+      }'
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
     container_name: elasticsearch
+    expose:
+      - 9200
     ports:
       - "9200:9200"  # Expose Elasticsearch HTTP API port
       - "9300:9300"  # Expose Elasticsearch transport port
     environment:
+      - "node.name=elasticsearch"
       - "discovery.type=single-node"  # Run Elasticsearch as a single node
       - "cluster.name=my-custom-cluster"  # Specify a custom cluster name
       - "xpack.security.enabled=true"  # Enable security
@@ -36,7 +47,7 @@ services:
     expose:
       - 5432
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       POSTGRES_DB: your_db_name
       POSTGRES_USER: your_db_username
