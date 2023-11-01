@@ -74,7 +74,6 @@ public class CerpenServiceImpl implements CerpenService {
         var pagination = PaginationUtils.createPageable(pageNumber, limit, sortBy, sortOrder);
         var data = cerpenElasticsearchRepository.searchCerpen(keyword, pagination);
 
-        log.info(data.toString());
         return StreamSupport.stream(data.spliterator(), false)
                 .map(this::toCerpenResponse)
                 .collect(Collectors.toList());
