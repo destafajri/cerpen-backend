@@ -88,7 +88,9 @@ public class CerpenServiceImpl implements CerpenService {
                                                      String sortBy,
                                                      String sortOrder) {
         var pagination = PaginationUtils.createPageable(pageNumber, limit, sortBy, sortOrder);
-        var data = cerpenRepository.findCerpenAndAuthorNamesByIds(dto.getId(), pagination);
+
+        var data = dto.getId().size() == 0 ? cerpenRepository.findAll(pagination) :
+                cerpenRepository.findCerpenAndAuthorNamesByIds(dto.getId(), pagination);
 
         return StreamSupport.stream(data.spliterator(), false)
                 .map(this::toCerpenResponse)
