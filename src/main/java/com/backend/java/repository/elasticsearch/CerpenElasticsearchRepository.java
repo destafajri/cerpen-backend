@@ -17,26 +17,27 @@ public interface CerpenElasticsearchRepository extends ElasticsearchRepository<C
                 "bool": {
                         "should": [
                             {
-                                "match": {
+                                "term": {
                                     "title": "?0"
                                 }
                             },
                             {
-                                "match": {
+                                "term": {
                                     "author_name": "?0"
                                 }
                             },
                             {
-                                "match": {
+                                "term": {
                                     "tema": "?0"
                                 }
                             },
                             {
-                                "match": {
+                                "term": {
                                     "cerpen_contains": "?0"
                                 }
                             }
                         ],
+                        "minimum_should_match":1,
                         "filter": {
                             "match": {
                                 "is_active": true
